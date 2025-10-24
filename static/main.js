@@ -16,15 +16,19 @@ function getCookie(name) {
 }
 
 
-function getAllTodos(url) {
-  
-  fetch(url, {
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
+async function getAllTodos(url) {
+  try{
+    const response = await fetch(url, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
     }
-  })
-  .then(response => response.json())
-  .then(data => {
+
+    const data = await response.json();
+
     const todoList = document.getElementById("todoList");
     todoList.innerHTML = "";
 
@@ -36,7 +40,9 @@ function getAllTodos(url) {
         </li>`
         todoList.innerHTML += todoHTMLElement;
     });
-  });
+ }catch(error){
+  console.error('Error en getAllTodos:', error);
+ }
 }
 
 
