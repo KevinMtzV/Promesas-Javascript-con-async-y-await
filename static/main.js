@@ -123,17 +123,23 @@ async function updateTodo(url, payload) {
 }
 
 
-function deleteTodo(url) {
-  fetch(url, {
-    method: "DELETE",
-    credentials: "same-origin",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-      "X-CSRFToken": getCookie("csrftoken"),
+async function deleteTodo(url) {
+  try{
+    const response = await fetch(url, {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": getCookie("csrftoken"),
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
     }
-  })
-  .then(response => response.json())
-  .then(data => {
+    const data = await response.json();
+
     console.log(data);
-  });
+  }catch(error){
+    console.log("Error en deleteTodo",error)
+  }
 }
