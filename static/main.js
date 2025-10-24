@@ -72,20 +72,28 @@ async function getAllTodos(url) {
 };
 
 
-function addTodo(url, payload) {
-  fetch(url, {
-    method: "POST",
-    credentials: "same-origin",
-    headers: {
-      "X-Requested-With": "XMLHttpRequest",
-      // "X-CSRFToken": getCookie("csrftoken"),
-    },
-    body: JSON.stringify({payload: payload})
-  })
-  .then(response => response.json())
-  .then(data => {
+async function addTodo(url, payload) {
+  try{  
+    const response = await fetch(url, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Content-Type": "application/json",
+        // "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify({payload: payload})
+    })
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`)
+    }
+
+    const data = await response.json();
     console.log(data);
-  });
+
+  }catch(error){
+    console.error('Error en addTodo: ',error);
+  }
 }
 
 
